@@ -1,77 +1,79 @@
 % Grammatikregler
 s --> np.
 
-np --> det(Genus,Species,Numerus,Kasus), jj(Genus,Species,Numerus,Kasus), n(Genus,Species,Numerus,Kasus).
-np --> det(Genus,Species,Numerus,Kasus), jj(Genus,Species,Numerus,Kasus), n(Genus,Species,Numerus,Kasus), n(Genus,Species,Numerus,Kasus).
+np --> det(Genus,Species,Numerus,Kasus), jj(Genus,Species,Numerus,Kasus), n(Genus,Species,Numerus,nominativ).
+np --> det(Genus,Species,Numerus,Kasus), jj(Genus,Species,Numerus,Kasus), n(Genus,Species,Numerus,genitiv), n(_,_,_,nominativ).
 
 % Lexikon
-det(utrum,_,singularis,_) --> [ en ]. 
-det(neutrum,_,singularis,_) --> [ ett ]. 
-det(_,_,_,_) --> [ den ].
-det(_,_,_,_) --> [ det ].
-det(_,_,_,_) --> [ några ].
-det(_,_,_,_) --> [ de ].
+det(utrum,indefinit,singularis,_) --> [ en ]. 
+det(neutrum,indefinit,singularis,_) --> [ ett ]. 
+det(utrum,definit,singularis,_) --> [ den ].
+det(maskulinum,definit,singularis,_) --> [ den ].
+det(neutrum,definit,singularis,_) --> [ det ].
+det(_,indefinit,pluralis,_) --> [ några ].
+det(_,definit,pluralis,_) --> [ de ].
 
-jj(utrum,_,singularis,_) --> [ gammal ]. 
-jj(neutrum,_,singularis,_) --> [ gammalt ]. 
-jj(neutrum,_,pluralis,_) --> [ gamla ]. 
-jj(utrum,_,pluralis,_) --> [ gamla ].
-jj(_,_,_,_) --> [ gamle ].
+jj(utrum,indefinit,singularis,_) --> [ gammal ]. 
+jj(neutrum,indefinit,singularis,_) --> [ gammalt ]. 
+jj(_,definit,singularis,_) --> [ gamla ]. 
+jj(_,_,pluralis,_) --> [ gamla ].
+jj(maskulinum,_,singularis,_) --> [ gamle ].
 
-jj(_,_,_,_) --> [ röd ].
-jj(_,_,_,_) --> [ rött ].
-jj(_,_,_,_) --> [ röde ].
-jj(_,_,_,_) --> [ röda ].
+jj(_,_,singularis,_) --> [ röd ].
+jj(_,_,singularis,_) --> [ rött ].
+jj(_,definit,singularis,_) --> [ röda ].
+jj(_,_,pluralis,_) --> [ röda ].
 
-n(neutrum,_,singularis,_) --> [ bord ].
+n(utrum,indefinit,singularis,nominativ) --> [ man ].
+n(utrum,definit,singularis,nominativ) --> [ mannen ].
+n(maskulinum,definit,singularis,nominativ) --> [ mannen ].
+n(_,indefinit,pluralis,nominativ) --> [ män ].
+n(_,definit,pluralis,nominativ) --> [ männen ].
+n(utrum,indefinit,singularis,genitiv) --> [ mans ].
+n(utrum,definit,singularis,genitiv) --> [ mannens ].
+n(maskulinum,definit,singularis,genitiv) --> [ mannens ].
+n(_,indefinit,pluralis,genitiv) --> [ mäns ].
+n(_,definit,pluralis,genitiv) --> [ männens ].
 
-n(_,_,_,_) --> [ man ].
-n(_,_,_,_) --> [ mannen ].
-n(_,_,_,_) --> [ män ].
-n(_,_,_,_) --> [ männen ].
-n(_,_,_,_) --> [ mans ].
-n(_,_,_,_) --> [ mannens ].
-n(_,_,_,_) --> [ mäns ].
-n(_,_,_,_) --> [ männens ].
+n(utrum,indefinit,singularis,nominativ) --> [ kvinna ].
+n(utrum,definit,singularis,nominativ) --> [ kvinnan ].
+n(_,indefinit,pluralis,nominativ) --> [ kvinnor ].
+n(_,definit,pluralis,nominativ) --> [ kvinnorna ].
+n(utrum,indefinit,singularis,genitiv) --> [ kvinnas ].
+n(utrum,definit,singularis,genitiv) --> [ kvinnans ].
+n(_,indefinit,pluralis,genitiv) --> [ kvinnors ].
+n(_,definit,pluralis,genitiv) --> [ kvinnornas ].
 
-n(_,_,_,_) --> [ kvinna ].
-n(_,_,_,_) --> [ kvinnan ].
-n(_,_,_,_) --> [ kvinnor ].
-n(_,_,_,_) --> [ kvinnorna ].
-n(_,_,_,_) --> [ kvinnas ].
-n(_,_,_,_) --> [ kvinnans ].
-n(_,_,_,_) --> [ kvinnors ].
-n(_,_,_,_) --> [ kvinnornas ].
+n(neutrum,indefinit,_,nominativ) --> [ bord ].
+n(neutrum,definit,singularis,nominativ) --> [ bordet ].
+n(_,definit,pluralis,nominativ) --> [ borden ].
+n(neutrum,indefinit,_,genitiv) --> [ bords ].
+n(neutrum,definit,singularis,genitiv) --> [ bordets ].
+n(_,definit,pluralis,genitiv) --> [ bordens ].
 
-n(_,_,_,_) --> [ bordet ].
-n(_,_,_,_) --> [ borden ].
-n(_,_,_,_) --> [ bords ].
-n(_,_,_,_) --> [ bordets ].
-n(_,_,_,_) --> [ bordens ].
+n(neutrum,indefinit,_,nominativ) --> [ skal ].
+n(neutrum,definit,singularis,nominativ) --> [ skalet ].
+n(_,definit,pluralis,nominativ) --> [ skalen ].
+n(_,indefinit,_,genitiv) --> [ skals ].
+n(neutrum,definit,singularis,genitiv) --> [ skalets ].
+n(_,definit,pluralis,genitiv) --> [ skalens ].
 
-n(_,_,_,_) --> [ skal ].
-n(_,_,_,_) --> [ skalet ].
-n(_,_,_,_) --> [ skalen ].
-n(_,_,_,_) --> [ skals ].
-n(_,_,_,_) --> [ skalets ].
-n(_,_,_,_) --> [ skalens ].
+n(neutrum,indefinit,singularis,nominativ) --> [ äpple].
+n(neutrum,definit,singularis,nominativ) --> [ äpplet ].
+n(_,indefinit,pluralis,nominativ) --> [ äpplen ].
+n(_,definit,pluralis,nominativ) --> [ äpplena ].
+n(neutrum,indefinit,singularis,genitiv) --> [ äpples ].
+n(neutrum,definit,singularis,genitiv) --> [ äpplets ].
+n(_,indefinit,pluralis,genitiv) --> [ äpplens ].
+n(_,definit,pluralis,genitiv) --> [ äpplenas ].
 
-n(_,_,_,_) --> [ äpple].
-n(_,_,_,_) --> [ äpplet ].
-n(_,_,_,_) --> [ äpplen ].
-n(_,_,_,_) --> [ äpplena ].
-n(_,_,_,_) --> [ äpples ].
-n(_,_,_,_) --> [ äpplets ].
-n(_,_,_,_) --> [ äpplens ].
-n(_,_,_,_) --> [ äpplenas ].
-
-n(_,_,_,_) --> [ kant ].
-n(_,_,_,_) --> [ kanten ].
-n(_,_,_,_) --> [ kanter ].
-n(_,_,_,_) --> [ kanterna ].
-n(_,_,_,_) --> [ kants ].
-n(_,_,_,_) --> [ kantens ].
-n(_,_,_,_) --> [ kanters ].
-n(_,_,_,_) --> [ kanternas ].
+n(utrum,indefinit,singularis,nominativ) --> [ kant ].
+n(utrum,definit,singularis,nominativ) --> [ kanten ].
+n(_,indefinit,pluralis,nominativ) --> [ kanter ].
+n(_,definit,pluralis,nominativ) --> [ kanterna ].
+n(utrum,indefinit,singularis,genitiv) --> [ kants ].
+n(utrum,definit,singularis,genitiv) --> [ kantens ].
+n(_,indefinit,pluralis,genitiv) --> [ kanters ].
+n(_,definit,pluralis,genitiv) --> [ kanternas ].
 
 
