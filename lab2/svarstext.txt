@@ -1,0 +1,27 @@
+Kör testversionen
+på några (regelbundet) böjda ord
+- ätandes
+- springa
+- dödade
+på några sammansatta ord
+- fotboll
+- klubbnamn
+- bordsben
+på några (regelbundet) böjda sammansatta ord
+- maratonspringande
+- tentapluggade
+- solrosorna
+Hitta ett treledssammansatt substantiv i bestämd form plural. Vilken suffixregel används? Vad betyder den? Läs om hur suffixreglerna byggs upp på
+- fotbollsklubbarna
+
+klubbarna matchar suffixregeln klubb|arna @ en ar 
+fotbollsklubbarna sammansatt som fot|boll|s|klubbarna
+
+Vad betyder följande regel? Hur många ord genereras av den? Vilken ordklass har orden? 
+(dj|mm)@ a, ande, ~anden, ~ade
+
+får ej sluta med "dj" eller "mm", får ej kunna böjas med "anden" eller "ade" kan böjas enligt @, a, ande
+
+alitet ell, ellt, ~ella, ~a
+(mm)alitet al, alt, ~alande, ~a
+
