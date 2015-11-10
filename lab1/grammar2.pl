@@ -22,7 +22,7 @@ pp(pp(Prep,NP)) --> prep(Prep),np(NP).
 
 pron(pron(han)) --> [han].
 pron(pron(hon)) --> [hon].
-v(v('målade')) --> ['målade'].
+v(v('malade')) --> ['malade'].
 prep(prep(med)) --> [med].
 prep(prep(i)) --> [i].
 prep(prep(bakom)) --> [bakom].
