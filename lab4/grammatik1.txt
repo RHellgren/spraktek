@@ -1,0 +1,67 @@
+category lab {
+info("uppg1")
+link("hypterlänk" "länktext")
+}
+
+förutom@lab{
+X1(text="för"),
+X2(text="utom")
+-->
+mark(X1 X2)
+corr(X1.join(X2.real_text))
+action(scrutinizing)
+}
+
+
+tillbaka@lab{
+X1(text="till"),
+X2(text="baka")
+-->
+mark(X1 X2)
+corr(X1.join(X2.real_text))
+action(scrutinizing)
+}
+
+
+häromkvällen@lab{
+X1(text="härom"),
+X2(text="kvällen" | text="dagen")
+-->
+mark(X1 X2)
+corr(X1.join(X2.real_text))
+action(scrutinizing)
+}
+
+
+ibland@lab{
+X1(text="i"),
+X2(text="bland")
+-->
+mark(X1 X2)
+corr(X1.join(X2.real_text))
+action(scrutinizing)
+}
+
+rentut@lab{
+X1(text="rentut")
+-->
+mark(X1)
+corr(X1.replace("rent ut"))
+action(scrutinizing)
+}
+
+föredetta@lab{
+X1(text="föredetta")
+-->
+mark(X1)
+corr(X1.replace("före detta"))
+action(scrutinizing)
+}
+
+såpass@lab{
+X1(text="såpass")
+-->
+mark(X1)
+corr(X1.replace("så pass"))
+action(scrutinizing)
+}
