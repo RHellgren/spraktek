@@ -2,11 +2,11 @@ import moj.ri.SparseDistributedMemory;
 
 /**
  * A small but functional demo program trying to solve the synonym part
- * (ORD-delen) of the Swedish higher education entrance exam (Högskoleprovet).
+ * (ORD-delen) of the Swedish higher education entrance exam (HÃ¶gskoleprovet).
  * Only one-to-one word correspondances are supported, so far. Extending this
  * small, and very simple, program with various schemes for handling synonyms
  * with one-to-many word corespondances would probably make for an interesteing
- * course project for the Language Technology course (2D1418 Språkteknologi).
+ * course project for the Language Technology course (2D1418 SprÃ¥kteknologi).
  *
  * @author  Martin Hassel and Magnus Rosell
  * @version 2004
