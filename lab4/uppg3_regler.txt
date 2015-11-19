@@ -1,0 +1,13 @@
+category lab {
+info("uppg1")
+link("hypterlänk" "länktext")
+}
+
+r1@lab{
+X2(wordcl=pn & pnf=sub),
+X1(wordcl=pp | text="som" | text="om")
+-->
+mark(X1 X2)
+corr(X2.form(pnf:=obj))
+action(scrutinizing)
+}

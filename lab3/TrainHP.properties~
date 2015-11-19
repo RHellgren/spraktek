@@ -33,4 +33,3 @@ granska = off
 
 # Save preprocessed text (will be saved to different folder depending on mode set above)
 save_preprocessed_text = off
-

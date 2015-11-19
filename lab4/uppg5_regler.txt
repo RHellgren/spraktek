@@ -1,0 +1,14 @@
+category lab {
+info("uppg1")
+link("hypterlänk" "länktext")
+}
+
+r2@lab{
+X1(text="kommer"),
+Y(wordcl=pn | wordcl=ab)*,
+X2(wordcl=vb & vbf=inf)
+-->
+mark(X1 Y X2)
+corr(X2.insert("att"))
+action(scrutinizing)
+}
