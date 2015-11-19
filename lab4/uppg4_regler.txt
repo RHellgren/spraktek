@@ -4,10 +4,10 @@ link("hypterlänk" "länktext")
 }
 
 r1@lab{
-X1(worcl=vb & vbf=sup),
+X1(wordcl=vb & vbf=sup),
 X2(wordcl=vb & vbf=sup)
 -->
 mark(X1 X2)
-corr(X2.form(vbf=inf))
+corr(X2.form(vbf:=inf))
 action(scrutinizing)
 }
