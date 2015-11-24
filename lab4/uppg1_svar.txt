@@ -5,7 +5,3 @@ Deluppgift 1:
 		kiliga -> kilos
 		behaglig -> behagligt (kongruensfel?)
 		nätter -> nätterna (inte bestämd form)
-
-
-Deluppgift 2:
-	se grammatik1.txt
