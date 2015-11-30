@@ -1,6 +1,6 @@
 import requests
 import json
-import xml.etree.ElementTree
+from xml.dom import minidom
 
 with open('secrets.json') as data_file:    
     secrets = json.load(data_file)
@@ -16,11 +16,12 @@ if auth.status_code != requests.codes.ok:
 access_token = auth.json()["access_token"]
 print("Succesfully received access token")
 
-text = "Failure"
+text = "I fail at translating sentences."
 auth_token = "Bearer" + " " + access_token
 payload = {"text": text, "from": "en", "to": "sv"}
 
 translation = requests.get("http://api.microsofttranslator.com/v2/Http.svc/Translate", params=payload, headers={"Authorization": auth_token}, stream=True)
+translation.encoding = "UTF-8"
 
 if translation.status_code != requests.codes.ok:
   print(translation.text)
@@ -31,3 +32,8 @@ chunk_size = 10
 with open(output_file, 'wb') as fd:
     for chunk in translation.iter_content(chunk_size):
         fd.write(chunk)
+
+xmldoc = minidom.parse(output_file)
+itemlist = xmldoc.getElementsByTagName("string")
+output_str = itemlist[0].firstChild.nodeValue.encode('utf-8')
+print(output_str)
