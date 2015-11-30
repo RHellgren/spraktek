@@ -18,7 +18,7 @@ def get_access_token():
 
   return access_token
 
-def translate(access_token, lang_from, lang_to, text):
+def translate_text(access_token, lang_from, lang_to, text):
   payload = {"text": text, "from": lang_from, "to": lang_to}
   auth_token = "Bearer" + " " + access_token
   translation = requests.get("http://api.microsofttranslator.com/v2/Http.svc/Translate", params=payload, headers={"Authorization": auth_token}, stream=True)
@@ -46,7 +46,7 @@ def main():
   text = "I fail at translating sentences."
   lang_from = "en"
   lang_to = "de"
-  translation = translate(access_token, lang_from, lang_to, text)
+  translation = translate_text(access_token, lang_from, lang_to, text)
   print(translation)
 
 if __name__ == "__main__":
