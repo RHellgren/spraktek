@@ -157,3 +157,6 @@ fabric.properties
 
 # sftp configuration file
 sftp-config.json
+
+# Passwords
+secrets.json
