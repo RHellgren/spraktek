@@ -2,38 +2,52 @@ import requests
 import json
 from xml.dom import minidom
 
-with open('secrets.json') as data_file:    
-    secrets = json.load(data_file)
+def get_access_token():
+  with open('secrets.json') as data_file:    
+      secrets = json.load(data_file)
 
-headers = {"content-type": "application/x-www-form-urlencoded"}
-payload = {"grant_type": "client_credentials", "client_id": secrets["client_id"], "client_secret": secrets["client_secret"], "scope": "http://api.microsofttranslator.com"}
-auth = requests.post("https://datamarket.accesscontrol.windows.net/v2/OAuth2-13", data=payload, headers=headers)
+  headers = {"content-type": "application/x-www-form-urlencoded"}
+  payload = {"grant_type": "client_credentials", "client_id": secrets["client_id"], "client_secret": secrets["client_secret"], "scope": "http://api.microsofttranslator.com"}
+  auth = requests.post("https://datamarket.accesscontrol.windows.net/v2/OAuth2-13", data=payload, headers=headers)
 
-if auth.status_code != requests.codes.ok:
-  print(auth.text)
-  auth.raise_for_status()
+  if auth.status_code != requests.codes.ok:
+    print(auth.text)
+    auth.raise_for_status()
 
-access_token = auth.json()["access_token"]
-print("Succesfully received access token")
+  access_token = auth.json()["access_token"]
 
-text = "I fail at translating sentences."
-auth_token = "Bearer" + " " + access_token
-payload = {"text": text, "from": "en", "to": "sv"}
+  return access_token
 
-translation = requests.get("http://api.microsofttranslator.com/v2/Http.svc/Translate", params=payload, headers={"Authorization": auth_token}, stream=True)
-translation.encoding = "UTF-8"
+def translate(access_token, lang_from, lang_to, text):
+  payload = {"text": text, "from": lang_from, "to": lang_to}
+  auth_token = "Bearer" + " " + access_token
+  translation = requests.get("http://api.microsofttranslator.com/v2/Http.svc/Translate", params=payload, headers={"Authorization": auth_token}, stream=True)
+  translation.encoding = "UTF-8"
 
-if translation.status_code != requests.codes.ok:
-  print(translation.text)
-  translation.raise_for_status()
+  if translation.status_code != requests.codes.ok:
+    print(translation.text)
+    translation.raise_for_status()
 
-output_file = "output.xml"
-chunk_size = 10
-with open(output_file, 'wb') as fd:
-    for chunk in translation.iter_content(chunk_size):
-        fd.write(chunk)
+  output_file = "output.xml"
+  chunk_size = 10
+  with open(output_file, 'wb') as fd:
+      for chunk in translation.iter_content(chunk_size):
+          fd.write(chunk)
 
-xmldoc = minidom.parse(output_file)
-itemlist = xmldoc.getElementsByTagName("string")
-output_str = itemlist[0].firstChild.nodeValue.encode('utf-8')
-print(output_str)
+  xmldoc = minidom.parse(output_file)
+  itemlist = xmldoc.getElementsByTagName("string")
+  output_str = itemlist[0].firstChild.nodeValue.encode('utf-8')
+
+  return output_str
+
+def main():
+  access_token = get_access_token()
+  print("Successfully got access token")
+  text = "I fail at translating sentences."
+  lang_from = "en"
+  lang_to = "de"
+  translation = translate(access_token, lang_from, lang_to, text)
+  print(translation)
+
+if __name__ == "__main__":
+  main()
