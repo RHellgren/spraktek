@@ -5,15 +5,27 @@ var cheerio = require('cheerio');
 
 var app = express();
 
-app.get('/', function(req, res) {
-  var url = 'http://tyda.se/search/' + req.query.word + "?lang[0]=" + req.query.from + "&lang[1]=" + req.query.to;
+function getTranslations(query, callback) {
+  var url = 'http://tyda.se/search/' + query.word + "?lang[0]=" + query.from + "&lang[1]=" + query.to;
   request.get(url, function(error, body, response) {
     $ = cheerio.load(response);
-    console.log($('h2').text());
+    var translations = $('.box.box-searchresult:has(h2[id^="' + query.from + '"])')
+      .find(".list.list-translations>li.item>a")
+      .map(function(i, item) {
+        var t = $(this).text();
+        console.log(t);
+        return t;
+      })
+      .toArray();
+    callback(translations);
   });
+};
 
-  res.json({
-    "json": "response"
+app.get('/', function(req, res) {
+  getTranslations(req.query, function(translations) {
+    res.json({
+      "translations": translations
+    });
   });
 });
 
