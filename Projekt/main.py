@@ -1,5 +1,6 @@
 import requests
 import json
+import pprint
 from xml.dom import minidom
 
 def get_access_token():
@@ -18,8 +19,9 @@ def get_access_token():
 
   return access_token
 
-def translate_text(access_token, lang_from, lang_to, text):
-  payload = {"text": text, "from": lang_from, "to": lang_to}
+def bing_translate_sentence(lang_from, lang_to, sentence):
+  access_token = get_access_token()
+  payload = {"text": sentence, "from": lang_from, "to": lang_to}
   auth_token = "Bearer" + " " + access_token
   translation = requests.get("http://api.microsofttranslator.com/v2/Http.svc/Translate", params=payload, headers={"Authorization": auth_token}, stream=True)
   translation.encoding = "UTF-8"
@@ -36,9 +38,16 @@ def translate_text(access_token, lang_from, lang_to, text):
 
   xmldoc = minidom.parse(output_file)
   itemlist = xmldoc.getElementsByTagName("string")
-  output_str = itemlist[0].firstChild.nodeValue.encode('utf-8')
+  return itemlist[0].firstChild.nodeValue
 
-  return output_str
+def tyda_translate_sentence(lang_from, lang_to, sentence):
+  sentence_translations = []
+
+  for word in sentence.split(" "):
+    word_translations = translate_word(word, lang_from, lang_to)
+    sentence_translations.append(word_translations)
+
+  return sentence_translations
 
 def translate_word(word, lang_from, lang_to):
   payload = {"word": word, "from": lang_from, "to": lang_to}
@@ -55,16 +64,15 @@ def main():
   sentence = "I fail at translating sentences"
   lang_from = "en"
   lang_to = "sv"
-  access_token = get_access_token()
-  translated_sentence = translate_text(access_token, lang_from, lang_to, sentence)
-  print("Translating via Bing: " + translated_sentence)
 
-  sentence_translations = []
-  for word in sentence.split(" "):
-    word_translations = translate_word(word, lang_from, lang_to)
-    word_translations = map(lambda s: s.encode('utf-8'), word_translations)
-    print("Translating " + word + ": " + '[%s]' % ', '.join(map(str, word_translations)))
-    sentence_translations.append(word_translations)
+  bing_result = bing_translate_sentence(lang_from, lang_to, sentence)
+  tyda_result = tyda_translate_sentence(lang_from, lang_to, sentence)
+  
+  pp = pprint.PrettyPrinter(indent=4)
+  pp.pprint("Translating via Bing")
+  pp.pprint(bing_result)
+  pp.pprint("Translating via Tyda")
+  pp.pprint(tyda_result)
 
 if __name__ == "__main__":
   main()
