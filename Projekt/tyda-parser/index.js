@@ -12,9 +12,7 @@ function getTranslations(query, callback) {
     var translations = $('.box.box-searchresult:has(h2[id^="' + query.from + '"])')
       .find(".list.list-translations>li.item>a")
       .map(function(i, item) {
-        var t = $(this).text();
-        console.log(t);
-        return t;
+        return $(this).text();
       })
       .toArray();
     callback(translations);

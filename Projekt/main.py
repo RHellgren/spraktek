@@ -40,14 +40,31 @@ def translate_text(access_token, lang_from, lang_to, text):
 
   return output_str
 
+def translate_word(word, lang_from, lang_to):
+  payload = {"word": word, "from": lang_from, "to": lang_to}
+  translation = requests.get("http://localhost:8080", params=payload)
+
+  if translation.status_code != requests.codes.ok:
+    print(translation.text)
+    translation.raise_for_status()
+
+  json = translation.json()
+  return json["translations"]
+
 def main():
-  access_token = get_access_token()
-  print("Successfully got access token")
-  text = "I fail at translating sentences."
+  sentence = "I fail at translating sentences"
   lang_from = "en"
-  lang_to = "de"
-  translation = translate_text(access_token, lang_from, lang_to, text)
-  print(translation)
+  lang_to = "sv"
+  access_token = get_access_token()
+  translated_sentence = translate_text(access_token, lang_from, lang_to, sentence)
+  print("Translating via Bing: " + translated_sentence)
+
+  sentence_translations = []
+  for word in sentence.split(" "):
+    word_translations = translate_word(word, lang_from, lang_to)
+    word_translations = map(lambda s: s.encode('utf-8'), word_translations)
+    print("Translating " + word + ": " + '[%s]' % ', '.join(map(str, word_translations)))
+    sentence_translations.append(word_translations)
 
 if __name__ == "__main__":
   main()
