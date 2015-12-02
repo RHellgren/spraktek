@@ -1,5 +1,5 @@
-digg icecream 1 
-i digg 1 
+dig icecream 1
+i dig 1
 i like 2 
 like icecream 2 
 wohoo icecream 1 
