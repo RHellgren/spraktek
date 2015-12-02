@@ -91,7 +91,7 @@ def pick_best_word(last_word, word_translations):
         best_word = bigram['word']
 
   if(best_score == 0):
-    print("Unable to match any bigrams for word \"", last_word, "\"")
+    print("Unable to match any bigrams for word \"" + last_word + "\"")
     best_word = random.choice(word_translations)
 
   return (best_word, best_score)
