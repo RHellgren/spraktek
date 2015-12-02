@@ -163,7 +163,7 @@ secrets.json
 output.xml
 korpus.txt
 korpus2.txt
-bigrams.txt
+bigrams*.txt
 
 # Logs
 logs
