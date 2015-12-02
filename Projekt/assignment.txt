@@ -1,0 +1,5 @@
+Maskinöversättning genom direktöversättning.
+Implementera ett program som utgår ifrån direktöversättningsmetoden,
+till exempel genom att bara slå upp ord i ett lexikon och tar första översättningen,
+eller slå upp dem på internet.
+Testa sedan att använda n-gram för att förbättra översättningarna. (Johan).
