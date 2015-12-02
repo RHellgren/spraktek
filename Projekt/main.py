@@ -3,6 +3,7 @@ import requests
 import json
 import pprint
 import sys
+import codecs
 from xml.dom import minidom
 
 def get_access_token():
@@ -62,6 +63,25 @@ def translate_word(word, lang_from, lang_to):
 
   json = translation.json()
   return json["translations"]
+
+def find_first_index(word):
+  with codecs.open('index.txt','r',encoding='utf8') as f:
+    for line in f:
+      if word[:2] == line[:2]:
+        break
+  info = line.split()
+  return info[1]
+
+def find_word_info(word):
+  list_of_bigrams = []
+  with codecs.open('bigrams_clean.txt','r',encoding='utf8') as f:
+    index = find_first_index(word)
+    f.seek(index)
+    line = f.readline()
+    while line[:2] == word[:2]:
+      list_of_bigrams.append(line.split())
+      index += len(line)
+  return list_of_bigrams
 
 def main(lang_from, lang_to, sentence):
   bing_result = bing_translate_sentence(lang_from, lang_to, sentence)
