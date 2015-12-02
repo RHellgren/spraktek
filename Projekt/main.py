@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import requests
 import json
 import pprint
@@ -24,7 +25,6 @@ def bing_translate_sentence(lang_from, lang_to, sentence):
   payload = {"text": sentence, "from": lang_from, "to": lang_to}
   auth_token = "Bearer" + " " + access_token
   translation = requests.get("http://api.microsofttranslator.com/v2/Http.svc/Translate", params=payload, headers={"Authorization": auth_token}, stream=True)
-  translation.encoding = "UTF-8"
 
   if translation.status_code != requests.codes.ok:
     print(translation.text)
@@ -38,7 +38,9 @@ def bing_translate_sentence(lang_from, lang_to, sentence):
 
   xmldoc = minidom.parse(output_file)
   itemlist = xmldoc.getElementsByTagName("string")
-  return itemlist[0].firstChild.nodeValue
+  translated_sentence = itemlist[0].firstChild.nodeValue
+
+  return translated_sentence
 
 def tyda_translate_sentence(lang_from, lang_to, sentence):
   sentence_translations = []
