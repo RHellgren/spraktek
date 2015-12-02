@@ -2,6 +2,7 @@
 import requests
 import json
 import pprint
+import sys
 from xml.dom import minidom
 
 def get_access_token():
@@ -62,11 +63,7 @@ def translate_word(word, lang_from, lang_to):
   json = translation.json()
   return json["translations"]
 
-def main():
-  sentence = "I fail at translating sentences"
-  lang_from = "en"
-  lang_to = "sv"
-
+def main(lang_from, lang_to, sentence):
   bing_result = bing_translate_sentence(lang_from, lang_to, sentence)
   tyda_result = tyda_translate_sentence(lang_from, lang_to, sentence)
   
@@ -77,4 +74,10 @@ def main():
   pp.pprint(tyda_result)
 
 if __name__ == "__main__":
-  main()
+  l = len(sys.argv)
+  if(l > 4):
+    print("Passed too many arguments. Got", l, "expected 4")
+  elif(l < 4):
+    print("Passed too few arguments., Got", l, " expcted 4")
+  else:
+    main(sys.argv[1], sys.argv[2], sys.argv[3])
