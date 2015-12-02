@@ -164,6 +164,7 @@ output.xml
 korpus.txt
 korpus2.txt
 bigrams*.txt
+index.txt
 
 # Logs
 logs
