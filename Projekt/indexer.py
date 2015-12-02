@@ -10,14 +10,14 @@ for first_char in list_of_chars:
 offset = 0
 current_combination_index = 0
 first = True
-with codecs.open('bigrams_clean.txt','r',encoding='utf8') as file_read:
+with codecs.open('bigrams_clean.txt','rb',encoding='utf8') as file_read:
     line = file_read.readline()
     with codecs.open('index.txt','w',encoding='utf8') as file_write:
         for combination in combinations:
             if line[:2] == combination:
                 file_write.write(combination + ' ' + str(offset) + '\n')
                 while line[:2] == combination:
-                    offset += len(line)
+                    offset += len(line.encode('utf-8'))
                     line = file_read.readline()
             else:
                 file_write.write(combination + ' -1\n')

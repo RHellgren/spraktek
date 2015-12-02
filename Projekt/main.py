@@ -4,7 +4,10 @@ import json
 import pprint
 import sys
 import codecs
+import random
 from xml.dom import minidom
+
+pp = pprint.PrettyPrinter(indent=4)
 
 def get_access_token():
   with open('secrets.json') as data_file:    
@@ -45,13 +48,53 @@ def bing_translate_sentence(lang_from, lang_to, sentence):
   return translated_sentence
 
 def tyda_translate_sentence(lang_from, lang_to, sentence):
-  sentence_translations = []
+  words = sentence.split()
+  translated_sentences = []
+  starting_words = translate_word(words[0], lang_from, lang_to)
+  best_score = -1
+  best_sentence = ""
 
-  for word in sentence.split(" "):
+  for starting_word in starting_words:
+    (translated_sentence, sentence_score) = translate_sentence_for_start_word(starting_word, words[1:], lang_from, lang_to)
+    translated_sentences.append((translated_sentence, sentence_score))
+    if(sentence_score > best_score):
+      best_sentence = translated_sentence
+      best_score = sentence_score
+
+  pp.pprint(translated_sentences)
+
+  return best_sentence
+
+def translate_sentence_for_start_word(starting_word, sentence, lang_from, lang_to):
+  translated_sentence = starting_word
+  last_word = starting_word
+  sentence_score = 0
+
+  for word in sentence:
     word_translations = translate_word(word, lang_from, lang_to)
-    sentence_translations.append(word_translations)
+    (word, score) = pick_best_word(last_word, word_translations)
+    translated_sentence += " " + word
+    sentence_score += score
 
-  return sentence_translations
+  return (translated_sentence.strip(), sentence_score)
+
+def pick_best_word(last_word, word_translations):
+  best_word = ""
+  best_score = 0
+
+  bigrams = find_word_bigrams(last_word)
+  
+  for bigram in bigrams:
+    if(bigram['word'] in word_translations):
+      if(bigram['score'] > best_score):
+        best_score = bigram['score']
+        best_word = bigram['word']
+
+  if(best_score == 0):
+    print("Unable to match any bigrams for word \"", last_word, "\"")
+    best_word = random.choice(word_translations)
+
+  return (best_word, best_score)
 
 def translate_word(word, lang_from, lang_to):
   payload = {"word": word, "from": lang_from, "to": lang_to}
@@ -62,32 +105,43 @@ def translate_word(word, lang_from, lang_to):
     translation.raise_for_status()
 
   json = translation.json()
-  return json["translations"]
+  translations = json["translations"]
+  return [elem for elem in translations if " " not in elem] 
 
 def find_first_index(word):
-  with codecs.open('index.txt','r',encoding='utf8') as f:
+  with codecs.open('index.txt','rb',encoding='utf-8') as f:
     for line in f:
       if word[:2] == line[:2]:
         break
   info = line.split()
-  return info[1]
+  return int(float(info[1]))
 
-def find_word_info(word):
+def find_word_bigrams(word):
   list_of_bigrams = []
-  with codecs.open('bigrams_clean.txt','r',encoding='utf8') as f:
+  with codecs.open('bigrams_clean.txt','rb',encoding='utf-8', errors='ignore') as f:
     index = find_first_index(word)
-    f.seek(index)
-    line = f.readline()
-    while line[:2] == word[:2]:
-      list_of_bigrams.append(line.split())
-      index += len(line)
-  return list_of_bigrams
+    if(index < 0):
+      return []
+
+    while True:
+      f.seek(index)
+      line = f.readline()
+
+      if(line[:2] != word[:2]):
+        return list_of_bigrams
+
+      tokens = line.split()
+      if(tokens[0] == word):
+        list_of_bigrams.append({'word': tokens[1], 'score': float(tokens[2])})
+      
+      index += len(line.encode('utf-8'))
+
+  return []
 
 def main(lang_from, lang_to, sentence):
   bing_result = bing_translate_sentence(lang_from, lang_to, sentence)
   tyda_result = tyda_translate_sentence(lang_from, lang_to, sentence)
   
-  pp = pprint.PrettyPrinter(indent=4)
   pp.pprint("Translating via Bing")
   pp.pprint(bing_result)
   pp.pprint("Translating via Tyda")
