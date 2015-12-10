@@ -1,0 +1,34 @@
+### Stemming Lab v1.0b ###
+### Thu Dec 10 12:31:49 2015 ###
+
+### Step1 ###
+spr|ungit$->inga; 
+spr|ang$->inga; 
+s$->; 
+t$->;
+
+### Step2 ###
+spring|ande$->a; 
+en$->; 
+na$->; 
+an$->; 
+n$->; 
+ade$->; 
+ande$->; 
+ade$->; 
+te$->;
+
+### Step3 ###
+cyk|el$->l; 
+^dat|or$->; 
+sim|mar$->; 
+sim|ma$->; 
+sim|ning$->; 
+sim|m$->; 
+a$->; 
+ar$->; 
+er$->; 
+^tid|ning$->; 
+^tidn|ing$->;
+
+### END ###
