@@ -73,6 +73,7 @@ def translate_sentence_for_start_word(starting_word, sentence, lang_from, lang_t
   for word in sentence:
     word_translations = translate_word(word, lang_from, lang_to)
     (word, score) = pick_best_word(last_word, word_translations)
+    last_word = word
     translated_sentence += " " + word
     sentence_score += score
 
@@ -91,8 +92,14 @@ def pick_best_word(last_word, word_translations):
         best_word = bigram['word']
 
   if(best_score == 0):
-    print("Unable to match any bigrams for word \"" + last_word + "\"")
-    best_word = random.choice(word_translations)
+    for word in word_translations:
+      best_bigrams_count = 0
+      bigrams = find_word_bigrams(last_word)
+      if(len(bigrams) >= best_bigrams_count):
+        best_word = random.choice(word_translations)
+        best_bigrams_count = len(bigrams)
+
+    print("Unable to match any bigrams for word \"" + last_word + "\" chose next word to be \"" + best_word + "\", which has " + str(best_bigrams_count) + " bigrams")
 
   return (best_word, best_score)
 

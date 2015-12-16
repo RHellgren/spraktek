@@ -2,6 +2,7 @@ var express = require('express');
 var url = require('url');
 var request = require('request');
 var cheerio = require('cheerio');
+var _ = require('underscore');
 
 var app = express();
 
@@ -15,6 +16,8 @@ function getTranslations(query, callback) {
         return $(this).text();
       })
       .toArray();
+    translations = _.uniq(translations);
+    
     callback(translations);
   });
 };
