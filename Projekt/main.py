@@ -51,19 +51,15 @@ def tyda_translate_sentence(lang_from, lang_to, sentence):
   words = sentence.split()
   translated_sentences = []
   starting_words = translate_word(words[0], lang_from, lang_to)
-  best_score = -1
-  best_sentence = ""
 
   for starting_word in starting_words:
     (translated_sentence, sentence_score) = translate_sentence_for_start_word(starting_word, words[1:], lang_from, lang_to)
     translated_sentences.append((translated_sentence, sentence_score))
-    if(sentence_score > best_score):
-      best_sentence = translated_sentence
-      best_score = sentence_score
 
+  translated_sentences = sorted(translated_sentences, key=lambda tuple: -tuple[1])
   pp.pprint(translated_sentences)
 
-  return best_sentence
+  return translated_sentences[0]
 
 def translate_sentence_for_start_word(starting_word, sentence, lang_from, lang_to):
   translated_sentence = starting_word
