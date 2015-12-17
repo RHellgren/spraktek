@@ -48,56 +48,16 @@ def bing_translate_sentence(lang_from, lang_to, sentence):
   return translated_sentence
 
 def tyda_translate_sentence(lang_from, lang_to, sentence):
-  words = sentence.split()
-  translated_sentences = []
-  starting_words = translate_word(words[0], lang_from, lang_to)
+  translated_words = [translate_word(word, lang_from, lang_to) for word in sentence.split()]
+  #translated_words = [['så','vad','var','vilket'],['existera','var'],['kär','förälskad'],['omogen','unge','ansvar']]
 
-  for starting_word in starting_words:
-    (translated_sentence, sentence_score) = translate_sentence_for_start_word(starting_word, words[1:], lang_from, lang_to)
-    translated_sentences.append((translated_sentence, sentence_score))
+  (score, translation) = find_best_sentence(translated_words)
+  sentence = ""
+  for word in translation:
+    sentence += word + " "
+  sentence = sentence.strip()
 
-  translated_sentences = sorted(translated_sentences, key=lambda tuple: -tuple[1])
-  pp.pprint(translated_sentences)
-
-  return translated_sentences[0]
-
-def translate_sentence_for_start_word(starting_word, sentence, lang_from, lang_to):
-  translated_sentence = starting_word
-  last_word = starting_word
-  sentence_score = 0
-
-  for word in sentence:
-    word_translations = translate_word(word, lang_from, lang_to)
-    (word, score) = pick_best_word(last_word, word_translations)
-    last_word = word
-    translated_sentence += " " + word
-    sentence_score += score
-
-  return (translated_sentence.strip(), sentence_score)
-
-def pick_best_word(last_word, word_translations):
-  best_word = ""
-  best_score = 0
-
-  bigrams = find_word_bigrams(last_word)
-  
-  for bigram in bigrams:
-    if(bigram['word'] in word_translations):
-      if(bigram['score'] > best_score):
-        best_score = bigram['score']
-        best_word = bigram['word']
-
-  if(best_score == 0):
-    for word in word_translations:
-      best_bigrams_count = 0
-      bigrams = find_word_bigrams(last_word)
-      if(len(bigrams) >= best_bigrams_count):
-        best_word = random.choice(word_translations)
-        best_bigrams_count = len(bigrams)
-
-    print("Unable to match any bigrams for word \"" + last_word + "\" chose next word to be \"" + best_word + "\", which has " + str(best_bigrams_count) + " bigrams")
-
-  return (best_word, best_score)
+  return (score, sentence)
 
 def translate_word(word, lang_from, lang_to):
   payload = {"word": word, "from": lang_from, "to": lang_to}
@@ -110,6 +70,47 @@ def translate_word(word, lang_from, lang_to):
   json = translation.json()
   translations = json["translations"]
   return [elem for elem in translations if " " not in elem] 
+
+def find_best_sentence(translations):
+  V = [{}]
+  path = {}
+
+  for y in translations[0]:
+    V[0][y] = 0
+    path[y] = [y]
+
+  for t in range(1, len(translations)):
+    V.append({})
+    newpath = {}
+
+    for word in translations[t]:
+      best_word = ""
+      best_score = 0
+
+      for prev_word in translations[t-1]:
+        word_score = V[t-1][prev_word]
+        bigrams = find_word_bigrams(prev_word)
+        for bigram in bigrams:
+          if(bigram['word'] == word):
+            word_score = word_score + bigram['score'] 
+
+        if(word_score > best_score):
+          best_word = prev_word
+          best_score = word_score
+
+      if(best_score == 0):
+        best_word = random.choice(translations[t-1])
+        pp.pprint("No score for \"" + word + "\", randomly selected previous word to be \"" + best_word + "\"")
+
+      V[t][word] = best_score
+      newpath[word] = path[best_word] + [word]
+
+    path = newpath
+
+  n = len(translations) - 1
+  (score, state) = max((V[n][y], y) for y in translations[n])
+
+  return (score, path[state])
 
 def find_first_index(word):
   with codecs.open('index.txt','rb',encoding='utf-8') as f:
@@ -142,11 +143,11 @@ def find_word_bigrams(word):
   return []
 
 def main(lang_from, lang_to, sentence):
-  bing_result = bing_translate_sentence(lang_from, lang_to, sentence)
+#  bing_result = bing_translate_sentence(lang_from, lang_to, sentence)
   tyda_result = tyda_translate_sentence(lang_from, lang_to, sentence)
   
-  pp.pprint("Translating via Bing")
-  pp.pprint(bing_result)
+#  pp.pprint("Translating via Bing")
+#  pp.pprint(bing_result)
   pp.pprint("Translating via Tyda")
   pp.pprint(tyda_result)
 
