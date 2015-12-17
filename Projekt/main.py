@@ -48,16 +48,20 @@ def bing_translate_sentence(lang_from, lang_to, sentence):
   return translated_sentence
 
 def tyda_translate_sentence(lang_from, lang_to, sentence):
-  translated_words = [translate_word(word, lang_from, lang_to) for word in sentence.split()]
-  #translated_words = [['så','vad','var','vilket'],['existera','var'],['kär','förälskad'],['omogen','unge','ansvar']]
+  return [translate_word(word, lang_from, lang_to) for word in sentence.split()]
 
-  (score, translation) = find_best_sentence(translated_words)
+def translate_with_1gram(translated_words):
+  return (0, list_to_str([random.choice(words) for words in translated_words]))
+
+def translate_with_2gram(translated_words):
+  (score, translation) = viterbi(translated_words)
+  return (score, list_to_str(translation))
+
+def list_to_str(l):
   sentence = ""
-  for word in translation:
+  for word in l:
     sentence += word + " "
-  sentence = sentence.strip()
-
-  return (score, sentence)
+  return sentence.strip()
 
 def translate_word(word, lang_from, lang_to):
   payload = {"word": word, "from": lang_from, "to": lang_to}
@@ -69,9 +73,9 @@ def translate_word(word, lang_from, lang_to):
 
   json = translation.json()
   translations = json["translations"]
-  return [elem for elem in translations if " " not in elem] 
+  return [elem for elem in translations if " " not in elem]   
 
-def find_best_sentence(translations):
+def viterbi(translations):
   V = [{}]
   path = {}
 
@@ -143,13 +147,18 @@ def find_word_bigrams(word):
   return []
 
 def main(lang_from, lang_to, sentence):
-#  bing_result = bing_translate_sentence(lang_from, lang_to, sentence)
-  tyda_result = tyda_translate_sentence(lang_from, lang_to, sentence)
+  bing_result = bing_translate_sentence(lang_from, lang_to, sentence)
+  translated_words = tyda_translate_sentence(lang_from, lang_to, sentence)
+
+  translation_1gram = translate_with_1gram(translated_words)
+  translation_2gram = translate_with_2gram(translated_words)
   
-#  pp.pprint("Translating via Bing")
-#  pp.pprint(bing_result)
-  pp.pprint("Translating via Tyda")
-  pp.pprint(tyda_result)
+  pp.pprint("Translating with 1-gram")
+  pp.pprint(translation_1gram)
+  pp.pprint("Translating with 2-gram")
+  pp.pprint(translation_2gram)
+  pp.pprint("Translating via Bing")
+  pp.pprint(bing_result)
 
 if __name__ == "__main__":
   l = len(sys.argv)
