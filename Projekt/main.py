@@ -122,7 +122,7 @@ def find_first_index(word):
 
 def find_word_bigrams(word):
   list_of_bigrams = []
-  with codecs.open('bigrams_clean.txt','rb',encoding='utf-8', errors='ignore') as f:
+  with codecs.open('2-grams.txt','rb',encoding='utf-8', errors='ignore') as f:
     index = find_first_index(word)
     if(index < 0):
       return []
