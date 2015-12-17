@@ -51,7 +51,25 @@ def tyda_translate_sentence(lang_from, lang_to, sentence):
   return [translate_word(word, lang_from, lang_to) for word in sentence.split()]
 
 def translate_with_1gram(translated_words):
-  return (0, list_to_str([random.choice(words) for words in translated_words]))
+  translation = []
+  score = 0
+  for words in translated_words:
+    best_score = 0
+    best_word = ""
+    for word in words:
+      score = unigram_stats(word)
+      if(score > best_score):
+        best_word = word
+        best_score = score
+
+    if(best_score == 0):
+      best_word = random.choice(words)
+      pp.pprint("No unigrams found, randomly selecting \"" + best_word + "\"")
+
+    translation.append(best_word)
+    score += best_score
+
+  return (score, list_to_str(translation))
 
 def translate_with_2gram(translated_words):
   (score, translation) = viterbi(translated_words)
@@ -116,18 +134,30 @@ def viterbi(translations):
 
   return (score, path[state])
 
-def find_first_index(word):
-  with codecs.open('2-gram-index.txt','rb',encoding='utf-8') as f:
+def find_first_index(word, index_file):
+  with codecs.open(index_file,'rb',encoding='utf-8') as f:
     for line in f:
       if word[:2] == line[:2]:
         break
   info = line.split()
   return int(float(info[1]))
 
+def unigram_stats(word):
+  with codecs.open('1-grams.txt','rb',encoding='utf-8', errors='ignore') as f:
+    index = find_first_index(word, '1-gram-index.txt')
+    if(index < 0):
+      return 0
+
+    f.seek(index)
+    line = f.readline()
+    tokens = line.split()
+
+    return int(tokens[1])
+
 def find_word_bigrams(word):
   list_of_bigrams = []
   with codecs.open('2-grams.txt','rb',encoding='utf-8', errors='ignore') as f:
-    index = find_first_index(word)
+    index = find_first_index(word, '2-gram-index.txt')
     if(index < 0):
       return []
 
