@@ -113,7 +113,7 @@ def find_best_sentence(translations):
   return (score, path[state])
 
 def find_first_index(word):
-  with codecs.open('index.txt','rb',encoding='utf-8') as f:
+  with codecs.open('2-gram-index.txt','rb',encoding='utf-8') as f:
     for line in f:
       if word[:2] == line[:2]:
         break

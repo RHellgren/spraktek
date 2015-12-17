@@ -6,7 +6,10 @@
   "scripts": {
     "start": "nodemon index.js",
     "translate": "python3 main.py",
-    "test-translate": "python3 main.py en sv 'I used direct translation to translate this sentence'"
+    "test-translate": "python3 main.py en sv 'I used direct translation to translate this sentence'",
+    "1-grams": "python3 ngrams.py 1 'korpus.txt'",
+    "2-grams": "python3 ngrams.py 2 'korpus.txt'",
+    "index": "python3 indexer.py 2-grams.txt 2-gram-index.txt && python3 indexer.py 1-grams.txt 1-gram-index.txt"
   },
   "author": "",
   "license": "ISC",
