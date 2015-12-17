@@ -34,7 +34,7 @@ def clean(unclean_file, output_file_name):
   with codecs.open(unclean_file,'r',encoding='utf8') as read_file:
       with codecs.open(output_file_name+".txt",'w',encoding='utf8') as write_file:
           for line in read_file.readlines():
-              if re.match(r'[a-zåäö]+ [a-zåäö]+ [0-9]+', line):
+              if re.match(r'[a-zåäö ]+ [0-9]+', line):
                   write_file.write(line)
 
 
@@ -42,5 +42,6 @@ n = int(sys.argv[1])
 input_file = sys.argv[2]
 output_file_name = str(n) + "-grams";
 
-unclean_file = build(n, input_file, output_file_name)
-clean(unclean_file)
+#unclean_file = build(n, input_file, output_file_name)
+unclean_file = "1-grams_unclean.txt"
+clean(unclean_file, output_file_name)
