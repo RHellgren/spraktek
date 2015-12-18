@@ -13,7 +13,7 @@ function getTranslations(query, callback) {
     var translations = $('.box.box-searchresult:has(h2[id^="' + query.from + '"])')
       .find(".list.list-translations>li.item>a")
       .map(function(i, item) {
-        return $(this).text();
+        return $(this).text().toLowerCase();
       })
       .toArray();
     translations = _.uniq(translations);
