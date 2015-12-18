@@ -86,7 +86,7 @@ def translate_with_1gram(translated_words):
 
     translation.append(best_word)
 
-  return (math.pow(2, sentence_score), list_to_str(translation))
+  return (sentence_score, list_to_str(translation))
 
 def translate_with_2gram(translated_words):
   (score, translation) = viterbi(translated_words)
@@ -113,6 +113,7 @@ def translate_word(word, lang_from, lang_to):
 def viterbi(translations):
   V = [{}]
   path = {}
+  min_prob = math.log(math.pow(10, -100))
 
   for y in translations[0]:
     V[0][y] = unigram_prob(y)
@@ -127,14 +128,23 @@ def viterbi(translations):
       best_score = -math.inf
 
       for prev_word in translations[t-1]:
-        word_score = V[t-1][prev_word] + unigram_prob(word) + bigram_prob(prev_word, word)
+        u = unigram_prob(word)
+        b = bigram_prob(prev_word, word)
+
+        # it's very improbable, but it might be our data that is wrong
+        if(u == -math.inf):
+          u = min_prob
+        if(b == -math.inf):
+          b = min_prob
+        
+        word_score = V[t-1][prev_word] + u + b
+
         if(word_score > best_score):
           best_word = prev_word
           best_score = word_score
 
       if(best_word == None):
         best_word = random.choice(translations[t-1])
-        pp.pprint("No score for \"" + word + "\", randomly selected previous word to be \"" + best_word + "\"")
 
       V[t][word] = best_score
       newpath[word] = path[best_word] + [word]
@@ -144,7 +154,7 @@ def viterbi(translations):
   n = len(translations) - 1
   (score, state) = max((V[n][y], y) for y in translations[n])
 
-  return (math.pow(2, score), path[state])
+  return (score, path[state])
 
 def find_first_index(word, index_file):
   with codecs.open(index_file,'rb',encoding='utf-8') as f:
