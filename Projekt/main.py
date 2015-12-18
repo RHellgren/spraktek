@@ -127,13 +127,7 @@ def viterbi(translations):
       best_score = -math.inf
 
       for prev_word in translations[t-1]:
-        unigram_score = unigram_prob(word)
-        word_score = V[t-1][prev_word]
-        if(unigram_prob(word) != -math.inf):
-          word_score += unigram_prob(word)
-        if(bigram_prob(prev_word, word) != -math.inf):
-          word_score += bigram_prob(prev_word, word)
-
+        word_score = V[t-1][prev_word] + unigram_prob(word) + bigram_prob(prev_word, word)
         if(word_score > best_score):
           best_word = prev_word
           best_score = word_score
