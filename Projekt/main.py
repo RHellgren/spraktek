@@ -25,8 +25,12 @@ unigram_count = number_of_ngrams(1)
 bigram_count = number_of_ngrams(2)
 
 def get_access_token():
-  with open('secrets.json') as data_file:    
-      secrets = json.load(data_file)
+  try:
+    with open('secrets.json') as data_file:    
+        secrets = json.load(data_file)
+  except IOError:
+    print("No secrets.json file found. Ask for one?")
+    return None
 
   headers = {"content-type": "application/x-www-form-urlencoded"}
   payload = {"grant_type": "client_credentials", "client_id": secrets["client_id"], "client_secret": secrets["client_secret"], "scope": "http://api.microsofttranslator.com"}
@@ -42,6 +46,9 @@ def get_access_token():
 
 def bing_translate_sentence(lang_from, lang_to, sentence):
   access_token = get_access_token()
+  if(access_token is None):
+    return None
+
   payload = {"text": sentence, "from": lang_from, "to": lang_to}
   auth_token = "Bearer" + " " + access_token
   translation = requests.get("http://api.microsofttranslator.com/v2/Http.svc/Translate", params=payload, headers={"Authorization": auth_token}, stream=True)
@@ -214,7 +221,11 @@ def find_word_bigrams(word):
 
 def main(lang_from, lang_to, sentence):
   bing_result = bing_translate_sentence(lang_from, lang_to, sentence)
-  translated_words = tyda_translate_sentence(lang_from, lang_to, sentence)
+  try:
+    translated_words = tyda_translate_sentence(lang_from, lang_to, sentence)
+  except IOError:
+    print("Unable to establish connection to server, try running \"node index.js\"")
+    return
 
   start = timer()
   translation_1gram = translate_with_1gram(translated_words)
@@ -228,8 +239,9 @@ def main(lang_from, lang_to, sentence):
   pp.pprint(translation_1gram)
   pp.pprint("Translating with 2-gram " + ("%.2f" % (end-mid)) + "s")
   pp.pprint(translation_2gram)
-  pp.pprint("Translating via Bing")
-  pp.pprint(bing_result)
+  if(bing_result != None):
+    pp.pprint("Translating via Bing")
+    pp.pprint(bing_result)
 
 if __name__ == "__main__":
   l = len(sys.argv)
